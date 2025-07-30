@@ -1,0 +1,20 @@
+{
+  "messages": [],
+  "current_section": null,
+  "cv_data": {
+    "personal_info": {
+      "name": "Test User",
+      "email": "test@example.com"
+    },
+    "summary": "Test professional summary",
+    "education": [],
+    "experience": [],
+    "projects": [],
+    "skills": [
+      "Python",
+      "JavaScript"
+    ],
+    "certifications": [],
+    "references": []
+  }
+}

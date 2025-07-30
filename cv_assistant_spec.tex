@@ -1,0 +1,148 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\geometry{margin=1in}
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+\title{CV Building Assistant \\ \large Specification Document}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Project Overview}
+The CV Building Assistant is an AI-powered conversational tool that enables users to create, refine, and download professional CVs. It interacts with users through a natural language interface to gather relevant information and organize it into a structured CV format, leveraging OpenAI's capabilities.
+
+\section{Core Features}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Conversational CV Building} - Progressive input collection across sections such as Personal Info, Education, Experience, etc.
+    \item \textbf{CV Template Management} - Multiple exportable and professional layout options.
+    \item \textbf{Intelligent Input Handling} - Validation, error feedback, and section skipping.
+    \item \textbf{Resume Enrichment} - Smart suggestions using AI for better phrasing and clarity.
+\end{itemize}
+
+\section{Agent Responsibilities}
+
+\subsection{cv\_agent.py}
+\begin{itemize}
+    \item Manages conversation flow and CV section transitions.
+    \item Maintains session state.
+\end{itemize}
+
+\subsection{conversation\_manager.py}
+\begin{itemize}
+    \item Handles chat history and memory retrieval.
+    \item Supports resuming partially completed sessions.
+\end{itemize}
+
+\section{System Modules \& Responsibilities}
+
+\subsection{models/}
+
+\textbf{cv\_data.py}
+\begin{itemize}
+    \item Represents structured CV content:
+    \begin{verbatim}
+class CVData:
+    personal_info: dict
+    summary: str
+    education: list
+    experience: list
+    projects: list
+    skills: list
+    certifications: list
+    references: list
+    \end{verbatim}
+\end{itemize}
+
+\textbf{conversation.py}
+\begin{itemize}
+    \item Tracks message metadata (sender, timestamps, content).
+\end{itemize}
+
+\subsection{services/}
+
+\textbf{openai\_service.py}
+\begin{itemize}
+    \item Interface to OpenAI API for response generation and data extraction.
+\end{itemize}
+
+\textbf{data\_extraction.py}
+\begin{itemize}
+    \item Parses structured data from natural language.
+\end{itemize}
+
+\subsection{utils/}
+
+\textbf{validators.py}
+\begin{itemize}
+    \item Ensures input correctness (e.g., phone/email format).
+\end{itemize}
+
+\textbf{formatters.py}
+\begin{itemize}
+    \item Prepares text sections for CV output formatting.
+\end{itemize}
+
+\subsection{ui/}
+
+\textbf{streamlit\_app.py}
+\begin{itemize}
+    \item Initializes Streamlit app and links to backend agents.
+\end{itemize}
+
+\textbf{components/}
+\begin{itemize}
+    \item \textbf{chat\_interface.py}: Displays chat and handles user input.
+    \item \textbf{progress\_tracker.py}: Visual indicator of section completion.
+\end{itemize}
+
+\section{Development Guidelines}
+\begin{itemize}
+    \item Use LangChain or AgentExecutor for tool-chaining.
+    \item Apply environment management using \texttt{python-dotenv}.
+    \item Ensure modularity and testability.
+    \item Follow separation of concerns for each module.
+\end{itemize}
+
+\section{Testing Scope}
+
+Tests located in the \texttt{tests/} directory include:
+\begin{itemize}
+    \item \texttt{test\_cv\_agent.py} - CV agent interaction logic.
+    \item \texttt{test\_conversation\_manager.py} - Chat memory handling.
+    \item \texttt{test\_data\_extraction.py} - Extraction and parsing accuracy.
+\end{itemize}
+
+\section{Configuration}
+
+\subsection{settings.py}
+\begin{itemize}
+    \item Holds application-wide settings (e.g., model name, template path).
+\end{itemize}
+
+\subsection{.env.example}
+\begin{verbatim}
+OPENAI_API_KEY=your-key-here
+DEFAULT_MODEL=gpt-4
+TEMPLATE_DIR=templates/
+DEBUG=true
+\end{verbatim}
+
+\section{Future Enhancements}
+\begin{itemize}
+    \item Multi-language CV generation.
+    \item Job-tailored resume creation.
+    \item LinkedIn scraping/import.
+    \item Export to DOCX or LaTeX.
+    \item Cloud-based saving and version history.
+\end{itemize}
+
+\end{document}

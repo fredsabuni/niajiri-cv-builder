@@ -1,0 +1,173 @@
+{
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "Karibu! I\u2019m Niajiri, your CV Building Assistant, here to help everyone\u2014tech or non-tech, formal or informal jobs\u2014create a great CV. Let\u2019s start! You can use the formats I suggest or just chat naturally."
+    },
+    {
+      "role": "user",
+      "content": "John Doe, john@example.com, +255712345678, Dar es Salaam"
+    },
+    {
+      "role": "assistant",
+      "content": "Personal information added successfully! Let\u2019s move forward.\n\nGreat! Tell me a bit about yourself professionally. For example, say something like 'I\u2019ve worked as a teacher for 3 years' or 'I run a small shop.' Type 'skip' if you\u2019d rather skip this."
+    },
+    {
+      "role": "user",
+      "content": "I\u2019ve worked as a teacher for 3 years"
+    },
+    {
+      "role": "assistant",
+      "content": "Summary added successfully: Dedicated educator with 3 years of teaching experience.. Great job!\n\nAwesome! Let me know about your education or training (e.g., school, course, year). Try: school, course, year, extra details (e.g., University of Dar es Salaam, Certificate in IT, 2020), or describe it naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": " University of Dar es Salaam, Certificate in IT, 2020"
+    },
+    {
+      "role": "assistant",
+      "content": "Education entry added successfully! Add another or type 'done' to finish.\n\nAwesome! Let me know about your education or training (e.g., school, course, year). Try: school, course, year, extra details (e.g., University of Dar es Salaam, Certificate in IT, 2020), or describe it naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "University of Dodoma, Certificate in IT, 2022"
+    },
+    {
+      "role": "assistant",
+      "content": "Education entry added successfully! Add another or type 'done' to finish.\n\nAwesome! Let me know about your education or training (e.g., school, course, year). Try: school, course, year, extra details (e.g., University of Dar es Salaam, Certificate in IT, 2020), or describe it naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "done"
+    },
+    {
+      "role": "assistant",
+      "content": "Education entries completed.\n\nWonderful! Share your work or activity history (e.g., job, role, start month/year, end month/year or 'now', what you did). Use: company, role, start date, end date, description (e.g., Vodacom, Sales Assistant, 01/2021, now, Helped customers), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "Vodacom, Sales Assistant, 01/2021, now, Helped customers"
+    },
+    {
+      "role": "assistant",
+      "content": "Experience entry added successfully! Add another or type 'done' to finish.\n\nWonderful! Share your work or activity history (e.g., job, role, start month/year, end month/year or 'now', what you did). Use: company, role, start date, end date, description (e.g., Vodacom, Sales Assistant, 01/2021, now, Helped customers), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "done"
+    },
+    {
+      "role": "assistant",
+      "content": "Experience entries completed.\n\nFantastic! Tell me about a project or task you\u2019ve done (e.g., name, what it was, tools used). Try: name, description, tools (e.g., My Shop Website, Online store, WordPress), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "done"
+    },
+    {
+      "role": "assistant",
+      "content": "Projects entries completed.\n\nExcellent! List any skills you have (e.g., cooking, coding, driving). Just type them like: skill1, skill2, ... or describe them naturally."
+    },
+    {
+      "role": "user",
+      "content": "cooking, coding, driving"
+    },
+    {
+      "role": "assistant",
+      "content": "Skills added successfully! Looking good!\n\nAmazing! Mention any certificates or awards (e.g., name, who gave it, year). Try: name, issuer, year (e.g., First Aid, Red Cross, 2022), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "First Aid, Red Cross, 2022"
+    },
+    {
+      "role": "assistant",
+      "content": "Certification added successfully! Add another or type 'done' to finish.\n\nAmazing! Mention any certificates or awards (e.g., name, who gave it, year). Try: name, issuer, year (e.g., First Aid, Red Cross, 2022), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "done"
+    },
+    {
+      "role": "assistant",
+      "content": "Certifications entries completed.\n\nPerfect! Add someone who can vouch for you (e.g., name, contact, how they know you). Use: name, contact, relationship (e.g., Amina Hassan, amina@example.com, Boss), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "Amina Hassan, amina@example.com, Boss"
+    },
+    {
+      "role": "assistant",
+      "content": "Reference entry added successfully! Add another or type 'done' to finish.\n\nPerfect! Add someone who can vouch for you (e.g., name, contact, how they know you). Use: name, contact, relationship (e.g., Amina Hassan, amina@example.com, Boss), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "done"
+    },
+    {
+      "role": "assistant",
+      "content": "References entries completed.\n\nAll sections complete! Your CV is ready. Would you like to review, export, or get an improved version?"
+    },
+    {
+      "role": "user",
+      "content": "improved version"
+    },
+    {
+      "role": "assistant",
+      "content": "Failed to parse input. Please provide details in a clear format.\n\nHello! I\u2019m Niajiri, your CV Building Assistant. Please tell me your personal details (name, email, phone, address). You can type them like: name, email, phone, address (e.g., John Doe, john@example.com, +255712345678, Dar es Salaam), or just describe them naturally if that\u2019s easier."
+    }
+  ],
+  "current_section": null,
+  "cv_data": {
+    "personal_info": {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "phone": "+255712345678",
+      "address": "Dar es Salaam"
+    },
+    "summary": "Dedicated educator with 3 years of teaching experience.",
+    "education": [
+      {
+        "institution": "University of Dar es Salaam",
+        "degree": "Certificate in IT",
+        "year": "2020",
+        "details": ""
+      },
+      {
+        "institution": "University of Dodoma",
+        "degree": "Certificate in IT",
+        "year": "2022",
+        "details": ""
+      }
+    ],
+    "experience": [
+      {
+        "company": "Vodacom",
+        "role": "Sales Assistant",
+        "start_date": "01/2021",
+        "end_date": "present",
+        "description": "Helped customers"
+      }
+    ],
+    "projects": [],
+    "skills": [
+      "cooking",
+      "coding",
+      "driving"
+    ],
+    "certifications": [
+      {
+        "name": "First Aid",
+        "issuer": "Red Cross",
+        "year": "2022"
+      }
+    ],
+    "references": [
+      {
+        "name": "Amina Hassan",
+        "contact": "amina@example.com",
+        "relationship": "Boss"
+      }
+    ]
+  }
+}
