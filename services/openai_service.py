@@ -1,7 +1,7 @@
 import os
 from typing import Dict, Optional, Tuple
 from openai import OpenAI
-from dotenv import load_dotenv
+import streamlit as st
 import logging
 
 # Configure logging
@@ -25,11 +25,17 @@ except ImportError:
 
 class OpenAIService:
     def __init__(self, cost_mode: str = DEFAULT_COST_MODE):
-        load_dotenv()
-        api_key = os.getenv("OPENAI_API_KEY")
+        try:
+            # Try to get API key from Streamlit secrets (for cloud deployment)
+            api_key = st.secrets["OPENAI_API_KEY"]
+        except (KeyError, AttributeError):
+            # Fallback to environment variable for local development
+            api_key = os.getenv("OPENAI_API_KEY")
+            
         if not api_key:
-            logger.error("OPENAI_API_KEY not found in .env file.")
-            raise ValueError("OPENAI_API_KEY not set in environment.")
+            logger.error("OPENAI_API_KEY not found in Streamlit secrets or environment variables.")
+            raise ValueError("OPENAI_API_KEY not set. Please configure it in Streamlit secrets or environment variables.")
+        
         self.client = OpenAI(api_key=api_key)
         
         # Set configuration based on cost mode
@@ -77,7 +83,7 @@ class OpenAIService:
             
             # Convert to tokens (rough estimate: 1 token ≈ 4 characters)
             estimated_input_tokens = total_chars / 4
-            estimated_output_tokens = self.max_tokens * 2  # For batch response
+            estimated_output_tokens = self.max_tokens * 2   
             
             # Calculate cost
             input_cost = (estimated_input_tokens / 1000) * self.cost_per_1k_input_tokens

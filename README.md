@@ -56,8 +56,15 @@ cv-building-assistant
    pip install -r requirements.txt
    ```
 
-4. **Set up environment variables**:
-   Copy `.env.example` to `.env` and fill in the required values.
+4. **Set up configuration**:
+   For local development, create `.streamlit/secrets.toml` based on `.streamlit/secrets.toml.example`:
+   ```
+   mkdir -p .streamlit
+   cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+   ```
+   Then edit `.streamlit/secrets.toml` and add your OpenAI API key.
+   
+   For Streamlit Cloud deployment, add the secrets in your app settings instead.
 
 5. **Run the application**:
    ```
