@@ -194,7 +194,7 @@ def main():
 
     st.markdown("""
     <div style="text-align: center; padding: 15px; margin-bottom: 20px;">
-        <h1 style="color: #219680; margin: 0;">🚀 CV Builder</h1>
+        <h1 style="color: #219680; margin: 0;">🚀 Niajiri CV Builder</h1>
         <p style="color: #666; margin: 5px 0;">Let's build your professional CV together!</p>
     </div>
     """, unsafe_allow_html=True)
