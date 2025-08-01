@@ -12,6 +12,11 @@ from utils.validators import (
 )
 from services.openai_service import OpenAIService
 import re
+import logging
+
+# Set up logging for debugging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 class CVAgent:
     def __init__(self, conversation_manager: ConversationManager):
@@ -101,16 +106,22 @@ class CVAgent:
         return response
 
     def _handle_section_input(self, section: str, input: str, cv_data: CVData) -> tuple[str, bool, bool]:
+        logger.debug(f"Handling section input for {section}: '{input}'")
+        
         if input.lower() in ["skip", "done"] and section in self.repeatable_sections:
             if input.lower() == "skip":
                 return f"{section.replace('_', ' ').title()} skipped, retaining existing data.", True, True
             return f"{section.replace('_', ' ').title()} entries completed.", True, True
 
         structured_response, structured_success, advance = self._process_structured_input(section, input, cv_data)
+        logger.debug(f"Structured input result: success={structured_success}, response='{structured_response[:100]}...'")
+        
         if structured_success:
             return structured_response, True, advance
 
         parsed_data, error = self.openai_service.parse_natural_language(input, section)
+        logger.debug(f"OpenAI parsing result for {section}: parsed_data={parsed_data}, error='{error}'")
+        
         if parsed_data and not error:
             # Contextual validation for each section
             if section == "summary" and not self._is_valid_summary(parsed_data.get("summary", "")):
@@ -162,10 +173,20 @@ class CVAgent:
                     return "Education entry added successfully! Add another or type 'done' to finish.", True, False
                 
                 elif section == "experience":
-                    company, role, start_date, end_date, *description = [part.strip() for part in input.split(",")]
-                    description = description[0] if description else ""
+                    parts = [part.strip() for part in input.split(",")]
+                    logger.debug(f"Experience input parts: {parts}")
+                    
+                    if len(parts) < 5:
+                        return f"Experience needs 5 parts: company, role, start date, end date, description. You provided {len(parts)} parts. Please try: Vodacom, Sales Assistant, 01/2021, now, Helped customers", False, False
+                    
+                    company, role, start_date, end_date = parts[:4]
+                    description = ", ".join(parts[4:])  # Join remaining parts as description
+                    
+                    logger.debug(f"Parsed experience: company='{company}', role='{role}', start_date='{start_date}', end_date='{end_date}', description='{description}'")
+                    
                     is_valid, error = validate_experience(company, role, start_date, end_date, description)
                     if not is_valid:
+                        logger.debug(f"Validation failed: {error}")
                         return error, False, False
                     cv_data.add_experience(company, role, start_date, end_date, description)
                     return "Experience entry added successfully! Add another or type 'done' to finish.", True, False
@@ -207,8 +228,12 @@ class CVAgent:
                     cv_data.add_skill(skill)
                 return "Skills added successfully! Looking good!", True, True
             
-        except ValueError:
-            return f"Invalid format for {section.replace('_', ' ').title()}. Please check my suggestion or describe naturally.", False, False
+        except ValueError as e:
+            logger.debug(f"ValueError in structured input for {section}: {e}")
+            return f"Invalid format for {section.replace('_', ' ').title()}. Please check the format: {self.section_prompts[section]}", False, False
+        except Exception as e:
+            logger.error(f"Unexpected error in structured input for {section}: {e}")
+            return f"Error processing {section.replace('_', ' ').title()}. Please try the suggested format or describe naturally.", False, False
         return "Unknown section.", False, False
 
     def _process_parsed_data(self, section: str, parsed_data: Dict, cv_data: CVData) -> Tuple[str, bool]:
@@ -357,40 +382,83 @@ class CVAgent:
         return bool(data.get("name") and data.get("contact"))
 
     def _generate_improved_cv(self, cv_data: CVData) -> CVData:
-        """Generate an improved CV by enhancing details for diverse users."""
-        improved_data = CVData()
-        if cv_data.personal_info:
-            improved_data.personal_info = cv_data.personal_info.copy()
-        if cv_data.summary:
-            improved_summary = self.openai_service.enhance_summary(cv_data.summary, enhance_level="high", context="diverse")
-            improved_data.add_summary(improved_summary)
-        improved_data.education = [self._enhance_education_entry(entry) for entry in cv_data.education]
-        improved_data.experience = [self._enhance_experience_entry(entry) for entry in cv_data.experience]
-        improved_data.projects = [self._enhance_project_entry(entry) for entry in cv_data.projects]
-        improved_data.skills = cv_data.skills.copy()
-        improved_data.certifications = [self._enhance_certification_entry(entry) for entry in cv_data.certifications]
-        improved_data.references = cv_data.references.copy()
-        return improved_data
-
-    def _enhance_education_entry(self, entry: dict) -> dict:
-        """Enhance an education entry with AI suggestions for diverse backgrounds."""
-        enhanced_details = self.openai_service.enhance_education(entry.get("details", ""), entry["institution"], context="diverse")
-        return {**entry, "details": enhanced_details}
-
-    def _enhance_experience_entry(self, entry: dict) -> dict:
-        """Enhance an experience entry with AI suggestions for formal/informal roles."""
-        enhanced_desc = self.openai_service.enhance_experience(entry["description"], entry["role"], context="diverse")
-        return {**entry, "description": enhanced_desc}
-
-    def _enhance_project_entry(self, entry: dict) -> dict:
-        """Enhance a project entry with AI suggestions for varied tasks."""
-        enhanced_desc = self.openai_service.enhance_project(entry["description"], entry.get("technologies", ""), context="diverse")
-        return {**entry, "description": enhanced_desc}
-
-    def _enhance_certification_entry(self, entry: dict) -> dict:
-        """Enhance a certification entry with AI suggestions."""
-        enhanced_name = self.openai_service.enhance_certification(entry["name"], entry["issuer"], context="diverse")
-        return {**entry, "name": enhanced_name}
+        """Generate an improved CV by enhancing details using the cost-optimized OpenAI service."""
+        try:
+            # Convert CVData to dictionary format for the OpenAI service
+            cv_dict = {
+                "personal_info": cv_data.personal_info,
+                "summary": cv_data.summary,
+                "education": cv_data.education,
+                "experience": cv_data.experience,
+                "projects": cv_data.projects,
+                "skills": cv_data.skills,
+                "certifications": cv_data.certifications,
+                "references": cv_data.references
+            }
+            
+            # Use the cost-optimized comprehensive improvement
+            improved_dict = self.openai_service.improve_cv_comprehensively(cv_dict)
+            
+            # Convert back to CVData format
+            improved_data = CVData()
+            if improved_dict.get("personal_info"):
+                improved_data.personal_info = improved_dict["personal_info"]
+            if improved_dict.get("summary"):
+                improved_data.add_summary(improved_dict["summary"])
+            
+            # Add improved education entries
+            for edu in improved_dict.get("education", []):
+                improved_data.add_education(
+                    edu.get("institution", ""),
+                    edu.get("degree", ""),
+                    edu.get("year", ""),
+                    edu.get("details", "")
+                )
+            
+            # Add improved experience entries
+            for exp in improved_dict.get("experience", []):
+                improved_data.add_experience(
+                    exp.get("company", ""),
+                    exp.get("role", ""),
+                    exp.get("start_date", ""),
+                    exp.get("end_date", ""),
+                    exp.get("description", "")
+                )
+            
+            # Add improved project entries
+            for proj in improved_dict.get("projects", []):
+                improved_data.add_project(
+                    proj.get("name", ""),
+                    proj.get("description", ""),
+                    proj.get("technologies", "")
+                )
+            
+            # Add skills (improved)
+            for skill in improved_dict.get("skills", []):
+                improved_data.add_skill(skill)
+            
+            # Add certifications
+            for cert in improved_dict.get("certifications", []):
+                improved_data.add_certification(
+                    cert.get("name", ""),
+                    cert.get("issuer", ""),
+                    cert.get("year", "")
+                )
+            
+            # Add references (unchanged)
+            for ref in improved_dict.get("references", []):
+                improved_data.add_reference(
+                    ref.get("name", ""),
+                    ref.get("contact", ""),
+                    ref.get("relationship", "")
+                )
+            
+            return improved_data
+            
+        except Exception as e:
+            logger.error(f"Error generating improved CV: {e}")
+            # Return original data if improvement fails
+            return cv_data
 
     def format_improved_cv(self, cv_data: CVData) -> str:
         """Format the improved CV as a string for display."""

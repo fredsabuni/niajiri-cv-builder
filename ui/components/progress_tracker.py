@@ -98,36 +98,7 @@ def progress_tracker(agent):
                     </div>
                     """, unsafe_allow_html=True)
         
-        # Quick navigation buttons
-        st.markdown("---")
-        st.markdown("#### 🎯 Quick Actions")
-        
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            if len(completed_required) < len(required_sections):
-                next_required = next((s for s in sections if s["required"] and not has_section_data(cv_data, s["key"])), None)
-                if next_required:
-                    if st.button(f"📝 Complete {next_required['name']}", use_container_width=True):
-                        st.info(f"💬 Tell me about your {next_required['name'].lower()} in the chat below!")
-        
-        with col2:
-            if completed_count > 0:
-                if st.button("👁️ Preview CV", use_container_width=True):
-                    st.session_state.show_preview = True
-                    st.session_state.show_download = False
-                    st.session_state.show_improve = False
-                    st.rerun()
-        
-        with col3:
-            if len(completed_required) == len(required_sections):
-                if st.button("📥 Download CV", use_container_width=True):
-                    st.session_state.show_download = True
-                    st.session_state.show_preview = False
-                    st.session_state.show_improve = False
-                    st.rerun()
     
-    # Motivational messages
     if completed_count == 0:
         st.info("🚀 **Let's get started!** Just tell me about yourself and I'll help build your professional CV.")
     elif len(completed_required) < len(required_sections):
@@ -140,7 +111,6 @@ def progress_tracker(agent):
         st.success("🎉 **Congratulations!** Your CV is complete with all 8 sections and ready to download!")
         st.balloons()
     
-    # Ensure session state is synchronized with the latest CV data
     st.session_state.cv_data = cv_data
     
     return cv_data

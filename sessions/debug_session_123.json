@@ -1,0 +1,56 @@
+{
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "Karibu! I\u2019m Niajiri, your CV Building Assistant, here to help everyone\u2014tech or non-tech, formal or informal jobs\u2014create a great CV. Let\u2019s start! You can use the formats I suggest or just chat naturally."
+    },
+    {
+      "role": "user",
+      "content": "John Doe, john@example.com, +255123456789, Dar es Salaam"
+    },
+    {
+      "role": "assistant",
+      "content": "Personal information added successfully! Let\u2019s move forward.\n\nGreat! Tell me a bit about yourself professionally. For example, say something like 'I\u2019ve worked as a teacher for 3 years' or 'I run a small shop.' Type 'skip' if you\u2019d rather skip this."
+    },
+    {
+      "role": "user",
+      "content": "skip"
+    },
+    {
+      "role": "assistant",
+      "content": "Error processing input. Please try again or use the structured format.\n\nGreat! Tell me a bit about yourself professionally. For example, say something like 'I\u2019ve worked as a teacher for 3 years' or 'I run a small shop.' Type 'skip' if you\u2019d rather skip this."
+    },
+    {
+      "role": "user",
+      "content": "skip"
+    },
+    {
+      "role": "assistant",
+      "content": "Error processing input. Please try again or use the structured format.\n\nGreat! Tell me a bit about yourself professionally. For example, say something like 'I\u2019ve worked as a teacher for 3 years' or 'I run a small shop.' Type 'skip' if you\u2019d rather skip this."
+    },
+    {
+      "role": "user",
+      "content": "Vodacom, Sales Assistant, 01/2021, now, Helped customers"
+    },
+    {
+      "role": "assistant",
+      "content": "Error processing input. Please try again or use the structured format.\n\nGreat! Tell me a bit about yourself professionally. For example, say something like 'I\u2019ve worked as a teacher for 3 years' or 'I run a small shop.' Type 'skip' if you\u2019d rather skip this."
+    }
+  ],
+  "current_section": "summary",
+  "cv_data": {
+    "personal_info": {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "phone": "+255123456789",
+      "address": "Dar es Salaam"
+    },
+    "summary": null,
+    "education": [],
+    "experience": [],
+    "projects": [],
+    "skills": [],
+    "certifications": [],
+    "references": []
+  }
+}

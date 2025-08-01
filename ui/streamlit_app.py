@@ -84,6 +84,78 @@ def generate_pdf(cv_data, template="Modern"):
     pdf_generator = CVPDFGenerator()
     return pdf_generator.generate_pdf(cv_data, template)
 
+def improve_cv_data(cv_data, cost_mode="budget"):
+    """Improve CV data using AI-powered enhancements with cost optimization"""
+    if not cv_data:
+        return cv_data
+    
+    try: 
+        from services.openai_service import OpenAIService
+        openai_service = OpenAIService(cost_mode=cost_mode)
+        
+        improved_data = openai_service.improve_cv_comprehensively(cv_data) 
+        improved_data = clean_placeholder_text(improved_data)
+        
+        return improved_data
+        
+    except Exception as e:
+        print(f"AI improvement error: {str(e)}")
+        
+        improved_data = {key: value.copy() if isinstance(value, dict) else value[:] if isinstance(value, list) else value for key, value in cv_data.items()}
+        
+        if improved_data.get("summary") and isinstance(improved_data["summary"], str):
+            summary = improved_data["summary"].strip()
+            if len(summary) < 100: 
+                improved_data["summary"] = f"Results-oriented professional with expertise in {summary.lower()}. Committed to delivering high-quality outcomes and driving organizational success."
+        
+        if improved_data.get("experience") and isinstance(improved_data["experience"], list):
+            action_verbs = ["Achieved", "Implemented", "Led", "Managed", "Developed", "Created", "Optimized"]
+            for i, exp in enumerate(improved_data["experience"]):
+                if exp.get("description") and not any(verb in exp["description"] for verb in action_verbs):
+                    exp["description"] = f"{action_verbs[i % len(action_verbs)]} {exp['description'].lower()}"
+        
+        if improved_data.get("skills") and isinstance(improved_data.get("skills"), str):
+            skills_list = [skill.strip().title() for skill in improved_data["skills"].split(",")]
+            improved_data["skills"] = skills_list
+        
+        return improved_data
+
+def clean_placeholder_text(cv_data):
+    """Remove placeholder text patterns from AI-generated content"""
+    import re
+    
+    def clean_text(text):
+        if not isinstance(text, str):
+            return text
+        
+        placeholder_pattern = r'\[([^\]]*)\]' 
+        cleaned = re.sub(placeholder_pattern, '', text)
+        
+        cleaned = re.sub(r'\s+', ' ', cleaned) 
+        cleaned = re.sub(r'\s*,\s*,', ',', cleaned) 
+        cleaned = re.sub(r'\s*\.\s*\.', '.', cleaned) 
+        cleaned = cleaned.strip()
+        
+        return cleaned
+    
+    def clean_dict_or_list(obj):
+        if isinstance(obj, dict):
+            return {key: clean_dict_or_list(value) for key, value in obj.items()}
+        elif isinstance(obj, list):
+            return [clean_dict_or_list(item) for item in obj]
+        elif isinstance(obj, str):
+            return clean_text(obj)
+        else:
+            return obj
+    
+    return clean_dict_or_list(cv_data)
+
+def save_cv_data(session_id, cv_data):
+    """Save CV data to session file"""
+    session_file = os.path.join("sessions", f"{session_id}.json")
+    with open(session_file, 'w') as f:
+        json.dump(cv_data, f, indent=4)
+
 def main():
     # Initialize session manager
     session_manager = get_session_manager()
@@ -108,7 +180,6 @@ def main():
     if "last_message_count" not in st.session_state:
         st.session_state.last_message_count = 0
 
-    # Initialize conversation manager and agent using session manager
     conversation_manager = session_manager.conversation_manager
     agent = CVAgent(conversation_manager)
 
@@ -128,14 +199,12 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    # Use the improved progress tracker
     cv_data = progress_tracker(agent)
 
     st.markdown('<div class="chat-container">', unsafe_allow_html=True)
     chat_interface(agent)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Action buttons
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.button("👁️", help="Preview CV", key="preview_btn"): 
@@ -355,14 +424,146 @@ def main():
         if not cv_data:
             st.warning("🚀 No CV data available to improve. Please build your CV first!")
         else:
-            with st.expander("🚀 Improve Your CV", expanded=True):
+            with st.expander("🚀 Improve Your CV with AI", expanded=True):
                 st.markdown("### ✨ AI-Powered CV Enhancement")
-                if st.button("🤖 Enhance CV", key="enhance_action", use_container_width=True):
-                    with st.spinner("🤖 Enhancing your CV..."):
-                        import time
-                        time.sleep(2)
-                        st.success("✅ CV enhanced successfully!")
-                        st.balloons()
+                
+                # Cost mode selection
+                col_info, col_mode = st.columns([2, 1])
+                with col_info:
+                    st.markdown("""
+                    Our AI-powered enhancement will improve your CV with:
+                    - 🤖 **Professional Language**: Industry-standard terminology
+                    - 🎯 **Smart Action Verbs**: Powerful, contextual action words  
+                    - 🔍 **ATS Optimization**: Better applicant tracking compatibility
+                    - � **Cost-Effective**: Optimized for affordability
+                    """)
+                
+                with col_mode:
+                    cost_modes = {
+                        "ultra_budget": "💰 Ultra Budget (~$0.005)",
+                        "budget": "💵 Budget (~$0.008)", 
+                        "balanced": "⚖️ Balanced (~$0.012)",
+                        "premium": "💎 Premium (~$0.025)"
+                    }
+                    
+                    # Set default cost mode (selectbox hidden)
+                    selected_mode = "budget"
+                    
+                    # selected_mode = st.selectbox(
+                    #     "Cost Mode",
+                    #     options=list(cost_modes.keys()),
+                    #     index=1,   
+                    #     format_func=lambda x: cost_modes[x],
+                    #     help="Choose your preferred cost/quality balance"
+                    # )
+                
+                # Show cost estimate
+                try:
+                    from services.openai_service import OpenAIService
+                    openai_service = OpenAIService(cost_mode=selected_mode)
+                    cost_info = openai_service.get_cost_info()
+                    
+                    st.info(f"**We use AI to enhance your CV with Niajiri**")
+                except Exception as e:
+                    st.info("**We use AI to enhance your CV with Niajiri**")
+
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("🤖 Enhance CV with AI", key="enhance_action", use_container_width=True):
+                        with st.spinner("🤖 AI is analyzing and enhancing your CV... This may take a moment."):
+                            # Improve the CV data using AI with selected cost mode
+                            improved_cv_data = improve_cv_data(cv_data, cost_mode=selected_mode)
+                            
+                            # Update session data
+                            session_manager = get_session_manager()
+                            session_manager.update_cv_data(improved_cv_data)
+                            
+                            # Update streamlit session state
+                            st.session_state.cv_data = improved_cv_data
+                            
+                            st.success("✅ CV enhanced successfully with AI-powered improvements!")
+                            st.balloons()
+                            
+                            # Show cost information
+                            try:
+                                openai_service = OpenAIService(cost_mode=selected_mode)
+                                session_cost = openai_service.get_session_cost()
+                                if session_cost > 0:
+                                    st.info(f"💰 Actual cost: ${session_cost} USD")
+                                else:
+                                    st.info(f"💰 Estimated cost: ~${cost_info['estimated_cost_per_improvement']} USD")
+                            except:
+                                pass
+                            
+                            # Show what was improved with more detail
+                            improvements = []
+                            if improved_cv_data.get("summary") != cv_data.get("summary"):
+                                improvements.append("📝 Professional summary enhanced with AI-generated language")
+                            if improved_cv_data.get("experience") != cv_data.get("experience"):
+                                improvements.append("💼 Experience descriptions improved with AI-powered action verbs and keywords")
+                            if improved_cv_data.get("skills") != cv_data.get("skills"):
+                                improvements.append("⚡ Skills optimized for ATS compatibility using AI analysis")
+                            if improved_cv_data.get("education") != cv_data.get("education"):
+                                improvements.append("🎓 Education descriptions professionally enhanced")
+                            if improved_cv_data.get("projects") != cv_data.get("projects"):
+                                improvements.append("🚀 Project descriptions improved with professional language")
+                            
+                            if improvements:
+                                st.info("**AI Improvements Applied:**\n" + "\n".join(f"• {imp}" for imp in improvements))
+                            else:
+                                st.info("🎯 Your CV is already well-optimized! No improvements needed.")
+                            
+                            # Auto-refresh the page to show updated data
+                            st.rerun()
+                
+                with col2:
+                    if st.button("📊 Show Enhancement Preview", key="preview_enhancement", use_container_width=True):
+                        # Set session state to show preview
+                        st.session_state.show_enhancement_preview = True
+                        st.rerun()
+                
+                # Enhancement Preview Section (outside columns to use full width)
+                if st.session_state.get("show_enhancement_preview", False):
+                    st.markdown("---")
+                    st.markdown("#### 🔍 AI Enhancement Preview")
+                    
+                    # Show summary comparison
+                    if cv_data.get("summary"):
+                        st.markdown("**📝 Summary Enhancement:**")
+                        col_before, col_after = st.columns(2)
+                        
+                        with col_before:
+                            st.markdown("*Before:*")
+                            st.text_area("Original Summary", cv_data["summary"], height=100, disabled=True, key="original_summary")
+                        
+                        with col_after:
+                            improved_preview = improve_cv_data(cv_data)
+                            st.markdown("*After:*")
+                            st.text_area("Enhanced Summary", improved_preview["summary"], height=100, disabled=True, key="enhanced_summary")
+
+                    # Show experience improvement
+                    if cv_data.get("experience") and len(cv_data["experience"]) > 0:
+                        st.markdown("**💼 Experience Enhancement:**")
+                        original_desc = cv_data["experience"][0].get("description", "")
+                        if original_desc:
+                            col_before_exp, col_after_exp = st.columns(2)
+                            
+                            with col_before_exp:
+                                st.markdown("*Before:*")
+                                st.text_area("Original Experience", original_desc, height=80, disabled=True, key="original_experience")
+                            
+                            with col_after_exp:
+                                improved_preview = improve_cv_data(cv_data)
+                                enhanced_desc = improved_preview["experience"][0].get("description", "")
+                                st.markdown("*After:*")
+                                st.text_area("Enhanced Experience", enhanced_desc, height=80, disabled=True, key="enhanced_experience")
+                    
+                    # Close preview button
+                    col_close_left, col_close_center, col_close_right = st.columns([1, 1, 1])
+                    with col_close_left:
+                        if st.button("❌ Close", key="close_preview", help="Close preview and go back"):
+                            st.session_state.show_enhancement_preview = False
+                            st.rerun()
 
 if __name__ == "__main__":
     main()

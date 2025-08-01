@@ -1,0 +1,187 @@
+{
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "Karibu! I\u2019m Niajiri, your CV Building Assistant, here to help everyone\u2014tech or non-tech, formal or informal jobs\u2014create a great CV. Let\u2019s start! You can use the formats I suggest or just chat naturally."
+    },
+    {
+      "role": "user",
+      "content": "John Doe, john@example.com, +255712345678, Dar es Salaam"
+    },
+    {
+      "role": "assistant",
+      "content": "Personal information added successfully! Let\u2019s move forward.\n\nGreat! Tell me a bit about yourself professionally. For example, say something like 'I\u2019ve worked as a teacher for 3 years' or 'I run a small shop.' Type 'skip' if you\u2019d rather skip this."
+    },
+    {
+      "role": "user",
+      "content": "I\u2019ve worked as a teacher for 3 years"
+    },
+    {
+      "role": "assistant",
+      "content": "Summary added successfully: Experienced educator with three years of teaching experience in [specific subject/grade level]. Demonstrated ability to create engaging learning environments and foster student growth and development. Passionate about inspiring and motivating students to reach their full potential.. Great job!\n\nAwesome! Let me know about your education or training (e.g., school, course, year). Try: school, course, year, extra details (e.g., University of Dar es Salaam, Certificate in IT, 2020), or describe it naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "University of Dar es Salaam, Certificate in IT, 2020"
+    },
+    {
+      "role": "assistant",
+      "content": "Education entry added successfully! Add another or type 'done' to finish.\n\nAwesome! Let me know about your education or training (e.g., school, course, year). Try: school, course, year, extra details (e.g., University of Dar es Salaam, Certificate in IT, 2020), or describe it naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "done"
+    },
+    {
+      "role": "assistant",
+      "content": "Education entries completed.\n\nWonderful! Share your work or activity history (e.g., job, role, start month/year, end month/year or 'now', what you did). Use: company, role, start date, end date, description (e.g., Vodacom, Sales Assistant, 01/2021, now, Helped customers), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "Vodacom, Sales Assistant, 01/2021, now, Helped customers"
+    },
+    {
+      "role": "assistant",
+      "content": "Experience entry added successfully! Add another or type 'done' to finish.\n\nWonderful! Share your work or activity history (e.g., job, role, start month/year, end month/year or 'now', what you did). Use: company, role, start date, end date, description (e.g., Vodacom, Sales Assistant, 01/2021, now, Helped customers), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "Niajiri, Sales Assistant, 01/2016, 01/2019, Helped customers"
+    },
+    {
+      "role": "assistant",
+      "content": "Experience entry added successfully! Add another or type 'done' to finish.\n\nWonderful! Share your work or activity history (e.g., job, role, start month/year, end month/year or 'now', what you did). Use: company, role, start date, end date, description (e.g., Vodacom, Sales Assistant, 01/2021, now, Helped customers), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "done"
+    },
+    {
+      "role": "assistant",
+      "content": "Experience entries completed.\n\nFantastic! Tell me about a project or task you\u2019ve done (e.g., name, what it was, tools used). Try: name, description, tools (e.g., My Shop Website, Online store, WordPress), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "My Shop Website, Online store, WordPress"
+    },
+    {
+      "role": "assistant",
+      "content": "Project entry added successfully! Add another or type 'done' to finish.\n\nFantastic! Tell me about a project or task you\u2019ve done (e.g., name, what it was, tools used). Try: name, description, tools (e.g., My Shop Website, Online store, WordPress), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "done"
+    },
+    {
+      "role": "assistant",
+      "content": "Projects entries completed.\n\nExcellent! List any skills you have (e.g., cooking, coding, driving). Just type them like: skill1, skill2, ... or describe them naturally."
+    },
+    {
+      "role": "user",
+      "content": "cooking, coding, driving"
+    },
+    {
+      "role": "assistant",
+      "content": "Skills added successfully! Looking good!\n\nAmazing! Mention any certificates or awards (e.g., name, who gave it, year). Try: name, issuer, year (e.g., First Aid, Red Cross, 2022), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "cooking, coding, driving"
+    },
+    {
+      "role": "assistant",
+      "content": "That doesn\u2019t seem like a valid certificate. Please include a name and when you got it (e.g., 'Driving License, 2021').\n\nAmazing! Mention any certificates or awards (e.g., name, who gave it, year). Try: name, issuer, year (e.g., First Aid, Red Cross, 2022), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": " First Aid, Red Cross, 2022"
+    },
+    {
+      "role": "assistant",
+      "content": "Certification added successfully! Add another or type 'done' to finish.\n\nAmazing! Mention any certificates or awards (e.g., name, who gave it, year). Try: name, issuer, year (e.g., First Aid, Red Cross, 2022), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "done"
+    },
+    {
+      "role": "assistant",
+      "content": "Certifications entries completed.\n\nPerfect! Add someone who can vouch for you (e.g., name, contact, how they know you). Use: name, contact, relationship (e.g., Amina Hassan, amina@example.com, Boss), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "Amina Hassan, amina@gmail.com, Boss"
+    },
+    {
+      "role": "assistant",
+      "content": "Reference entry added successfully! Add another or type 'done' to finish.\n\nPerfect! Add someone who can vouch for you (e.g., name, contact, how they know you). Use: name, contact, relationship (e.g., Amina Hassan, amina@example.com, Boss), or describe naturally. Type 'done' when finished or 'skip' to move on."
+    },
+    {
+      "role": "user",
+      "content": "done"
+    },
+    {
+      "role": "assistant",
+      "content": "References entries completed.\n\nAll sections complete! Your CV is ready. Would you like to review, export, or get an improved version?"
+    }
+  ],
+  "current_section": null,
+  "cv_data": {
+    "personal_info": {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "phone": "+255712345678",
+      "address": "Dar es Salaam"
+    },
+    "summary": "Dedicated educator with a successful three-year teaching tenure in . Proficient in fostering dynamic learning environments that enhance student progress and achievement. Committed to inspiring and empowering students to reach their full potential.",
+    "education": [
+      {
+        "institution": "University of Dar es Salaam",
+        "degree": "Certificate in IT",
+        "year": "2020",
+        "details": ""
+      }
+    ],
+    "experience": [
+      {
+        "company": "Vodacom",
+        "role": "Sales Assistant",
+        "start_date": "01/2021",
+        "end_date": "now",
+        "description": "Assisted customers in making informed purchasing decisions to enhance the shopping experience and drive sales."
+      },
+      {
+        "company": "Niajiri",
+        "role": "Sales Assistant",
+        "start_date": "01/2016",
+        "end_date": "01/2019",
+        "description": "Delivered exceptional customer service by promptly addressing inquiries and resolving issues, ensuring high levels of customer satisfaction."
+      }
+    ],
+    "projects": [
+      {
+        "name": "My Shop Website",
+        "description": "Online store",
+        "technologies": "WordPress"
+      }
+    ],
+    "skills": [
+      "culinary arts",
+      "programming"
+    ],
+    "certifications": [
+      {
+        "name": "First Aid",
+        "issuer": "Red Cross",
+        "year": "2022"
+      }
+    ],
+    "references": [
+      {
+        "name": "Amina Hassan",
+        "contact": "amina@gmail.com",
+        "relationship": "Boss"
+      }
+    ]
+  }
+}

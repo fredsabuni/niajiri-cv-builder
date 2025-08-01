@@ -131,10 +131,12 @@ def validate_education(institution: str, degree: str, year: str, details: str) -
     return True, ""
 
 def validate_experience(company: str, role: str, start_date: str, end_date: str, description: str) -> Tuple[bool, str]:
-    if not all([company, role, start_date, end_date]):
-        return False, "Company, role, start date, and end date are required."
-    if not re.match(r"^\d{2}/\d{4}$", start_date) or not re.match(r"^\d{2}/\d{4}$|^present$", end_date):
-        return False, "Dates must be in MM/YYYY format or 'present' for end date."
+    if not all([company, role, start_date, end_date, description]):
+        return False, "Company, role, start date, end date, and description are required."
+    if not re.match(r"^\d{2}/\d{4}$", start_date):
+        return False, "Start date must be in MM/YYYY format (e.g., 01/2021)."
+    if not re.match(r"^\d{2}/\d{4}$", end_date) and end_date.lower() not in ["present", "now", "current"]:
+        return False, "End date must be in MM/YYYY format or 'present'/'now' for current positions."
     return True, ""
 
 def validate_project(name: str, description: str, technologies: str) -> Tuple[bool, str]:
