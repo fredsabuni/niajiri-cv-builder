@@ -501,12 +501,12 @@ Make it: professional, ATS-friendly, 2-3 sentences, action-focused. Return only 
     def _build_parse_prompt(self, input_text: str, section: str) -> str:
         """Build a prompt for parsing natural language input based on the CV section."""
         prompts = {
-            "personal_info": f"Extract name, email, phone, and address from: '{input_text}'. Return a JSON object with keys: name, email, phone, address.",
-            "education": f"Extract a single education entry with institution, degree, year, and details from: '{input_text}'. Return a JSON object with keys: institution, degree, year, details.",
-            "experience": f"Extract a single experience entry with company, role, start_date, end_date, and description from: '{input_text}'. Return a JSON object with keys: company, role, start_date, end_date, description. Use MM/YYYY format for dates (e.g., 01/2021), or 'now'/'present' for end_date if ongoing.",
-            "projects": f"Extract a single project entry with name, description, and technologies from: '{input_text}'. Return a JSON object with keys: name, description, technologies.",
+            "personal_info": f"Extract name, email, phone, and address from: '{input_text}'. Return a JSON object with keys: name, email, phone, address. Use empty string \"\" for missing fields, never use null or omit keys.",
+            "education": f"Extract a single education entry with institution, degree, year, and details from: '{input_text}'. Return a JSON object with keys: institution, degree, year, details. Use empty string \"\" for missing fields.",
+            "experience": f"Extract a single experience entry with company, role, start_date, end_date, and description from: '{input_text}'. Return a JSON object with keys: company, role, start_date, end_date, description. Use MM/YYYY format for dates (e.g., 01/2021), or 'now'/'present' for end_date if ongoing. Use empty string \"\" for missing fields.",
+            "projects": f"Extract a single project entry with name, description, and technologies from: '{input_text}'. Return a JSON object with keys: name, description, technologies. Use empty string \"\" for missing fields.",
             "skills": f"Extract a list of skills from: '{input_text}'. Return a JSON object with a single key 'skills' containing a list of skill strings.",
-            "certifications": f"Extract a single certification entry with name, issuer, and year from: '{input_text}'. Return a JSON object with keys: name, issuer, year.",
-            "references": f"Extract a single reference entry with name, contact, and relationship from: '{input_text}'. Return a JSON object with keys: name, contact, relationship."
+            "certifications": f"Extract a single certification entry with name, issuer, and year from: '{input_text}'. Return a JSON object with keys: name, issuer, year. Use empty string \"\" for missing fields.",
+            "references": f"Extract a single reference entry with name, contact, and relationship from: '{input_text}'. Return a JSON object with keys: name, contact, relationship. Use empty string \"\" for missing fields."
         }
         return prompts.get(section, "Invalid section.")

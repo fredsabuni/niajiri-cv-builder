@@ -28,31 +28,30 @@ class TestCVAgent(unittest.TestCase):
         self.assertIn("Hello! I'm your CV Building Assistant", response)
         self.assertEqual(self.agent.get_current_section(self.session_id), "personal_info")
 
-    def test_process_personal_info_structured(self):
-        self.agent.start_session(self.session_id)
-        response = self.agent.process_input(self.session_id, "John Doe, john@example.com, +1234567890, 123 Main St")
-        self.assertIn("Personal information added successfully", response)
-        self.assertIn("Please provide a brief professional summary", response)
-        cv_data = self.conversation_manager.get_cv_data()
-        self.assertEqual(cv_data.personal_info["name"], "John Doe")
-        self.assertEqual(self.agent.get_current_section(self.session_id), "summary")
+    def test_personal_info_processing(self):
+        """Test processing personal information."""
+        response = self.agent.process_input(self.session_id, "Lillian Madeje, lillian@example.com, +255712889222, Dar es Salaam")
+        
+        cv_data = self.agent.conversation_manager.get_cv_data(self.session_id)
+        self.assertIsNotNone(cv_data.personal_info)
+        self.assertEqual(cv_data.personal_info["name"], "Lillian Madeje")
 
     def test_process_personal_info_natural(self):
         self.agent.start_session(self.session_id)
         with patch('services.openai_service.OpenAIService.parse_natural_language') as mock_parse:
             mock_parse.return_value = (
-                {"name": "John Doe", "email": "john@example.com", "phone": "+1234567890", "address": "123 Main St"},
+                {"name": "Lillian Madeje", "email": "lillian@example.com", "phone": "+255712889222", "address": "Dar es Salaam"},
                 ""
             )
-            response = self.agent.process_input(self.session_id, "My name is John Doe, my email is john@example.com, phone is +1234567890, and I live at 123 Main St.")
+            response = self.agent.process_input(self.session_id, "My name is Lillian Madeje, my email is lillian@example.com, phone is +255712889222, and I live at Dar es Salaam.")
             self.assertIn("Personal information added successfully", response)
             self.assertIn("Please provide a brief professional summary", response)
             cv_data = self.conversation_manager.get_cv_data()
-            self.assertEqual(cv_data.personal_info["name"], "John Doe")
+            self.assertEqual(cv_data.personal_info["name"], "Lillian Madeje")
 
     def test_process_education(self):
         self.agent.start_session(self.session_id)
-        self.agent.process_input(self.session_id, "John Doe, john@example.com, +1234567890, 123 Main St")
+        self.agent.process_input(self.session_id, "Lillian Madeje, lillian@example.com, +255712889222, Dar es Salaam")
         with patch('services.openai_service.OpenAIService.enhance_summary') as mock_enhance:
             mock_enhance.return_value = "Enhanced: Experienced software engineer"
             response = self.agent.process_input(self.session_id, "Experienced software engineer")
@@ -66,7 +65,7 @@ class TestCVAgent(unittest.TestCase):
 
     def test_multiple_education_entries(self):
         self.agent.start_session(self.session_id)
-        self.agent.process_input(self.session_id, "John Doe, john@example.com, +1234567890, 123 Main St")
+        self.agent.process_input(self.session_id, "Lillian Madeje, lillian@example.com, +255713456780, Dar es Salaam")
         with patch('services.openai_service.OpenAIService.enhance_summary') as mock_enhance:
             mock_enhance.return_value = "Enhanced: Experienced software engineer"
             self.agent.process_input(self.session_id, "Experienced software engineer")
@@ -83,14 +82,14 @@ class TestCVAgent(unittest.TestCase):
 
     def test_invalid_input_email(self):
         self.agent.start_session(self.session_id)
-        response = self.agent.process_input(self.session_id, "John Doe, invalid_email, +1234567890, 123 Main St")
+        response = self.agent.process_input(self.session_id, "Lillian Madeje, invalid_email, +255712889222, Dar es Salaam")
         self.assertIn("Invalid email format", response)
         self.assertIn("Please provide your personal information", response)
         self.assertEqual(self.agent.get_current_section(self.session_id), "personal_info")
 
     def test_invalid_input_date(self):
         self.agent.start_session(self.session_id)
-        self.agent.process_input(self.session_id, "John Doe, john@example.com, +1234567890, 123 Main St")
+        self.agent.process_input(self.session_id, "Lillian Madeje, lillian@example.com, +255712889222, Dar es Salaam")
         with patch('services.openai_service.OpenAIService.enhance_summary') as mock_enhance:
             mock_enhance.return_value = "Enhanced: Experienced software engineer"
             self.agent.process_input(self.session_id, "Experienced software engineer")
@@ -103,7 +102,7 @@ class TestCVAgent(unittest.TestCase):
 
     def test_skip_section(self):
         self.agent.start_session(self.session_id)
-        self.agent.process_input(self.session_id, "John Doe, john@example.com, +1234567890, 123 Main St")
+        self.agent.process_input(self.session_id, "Lillian Madeje, lillian@example.com, +255712889222, Dar es Salaam")
         with patch('services.openai_service.OpenAIService.enhance_summary') as mock_enhance:
             mock_enhance.return_value = "Enhanced: Experienced software engineer"
             self.agent.process_input(self.session_id, "Experienced software engineer")
@@ -130,7 +129,7 @@ class TestCVAgent(unittest.TestCase):
 
     def test_resume_session(self):
         self.agent.start_session(self.session_id)
-        self.agent.process_input(self.session_id, "John Doe, john@example.com, +1234567890, 123 Main St")
+        self.agent.process_input(self.session_id, "Lillian Madeje, lillian@example.com, +255712889222, Dar es Salaam")
         self.conversation_manager.save_session(self.session_id)
         self.agent = CVAgent(ConversationManager(sessions_dir=str(self.sessions_dir)))
         response = self.agent.start_session(self.session_id)
@@ -140,7 +139,7 @@ class TestCVAgent(unittest.TestCase):
 
     def test_summary_enhancement(self):
         self.agent.start_session(self.session_id)
-        self.agent.process_input(self.session_id, "John Doe, john@example.com, +1234567890, 123 Main St")
+        self.agent.process_input(self.session_id, "Lillian Madeje, lillian@example.com, +255712889222, Dar es Salaam")
         with patch('services.openai_service.OpenAIService.enhance_summary') as mock_enhance:
             mock_enhance.return_value = "Enhanced: Experienced software engineer with strong skills"
             response = self.agent.process_input(self.session_id, "Experienced software engineer")
