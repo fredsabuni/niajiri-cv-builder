@@ -23,39 +23,230 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Niajiri CV Building Assistant", layout="centered", initial_sidebar_state="collapsed")
 
-# Custom CSS
+# Custom CSS - Modern Dark Mode ChatGPT/Claude-inspired design
 st.markdown("""
     <style>
-        .stApp { background-color: #3A4040; color: #E0E0E0; height: 100vh; overflow-y: auto; }
-        .chat-container { position: fixed; bottom: 0; width: 100%; max-width: 800px; margin: 0 auto; background-color: #2A3030; padding: 10px; border-top: 2px solid #219680; z-index: 1000; }
-        .stTextArea textarea { background-color: #219680; color: #FFFFFF; border: 1px solid #1A5C50; border-radius: 5px; font-size: 16px; }
-        .stTextArea label { color: #E0E0E0; font-size: 16px; }
-        .icon-button { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background-color: #219680; color: white; border: 1px solid #1A5C50; border-radius: 50%; margin: 5px; cursor: pointer; font-size: 18px; }
-        .icon-button:hover { background-color: #1A5C50; }
-        .quick-actions { position: fixed; bottom: 70px; right: 20px; z-index: 1001; display: flex; flex-direction: column; align-items: flex-end; }
-        .popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #2A3030; padding: 20px; border: 2px solid #219680; border-radius: 10px; z-index: 1002; max-height: 80vh; overflow-y: auto; color: #E0E0E0; }
-        .popup.active { display: block; }
-        .popup-close { position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 20px; color: #E0E0E0; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1001; }
-        .overlay.active { display: block; }
-        .circular-progress { width: 60px; height: 60px; border: 6px solid #E0E0E0; border-top: 6px solid #219680; border-radius: 50%; animation: spin 1s linear infinite; position: fixed; top: 20px; right: 20px; z-index: 1000; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .progress-text { position: fixed; top: 85px; right: 20px; color: #219680; font-size: 14px; text-align: center; width: 60px; }
-        @media (max-width: 768px) { .chat-container { max-width: 100%; padding: 5px; } .stTextArea textarea { font-size: 14px; } .stTextArea label { font-size: 14px; } .icon-button { width: 35px; height: 35px; font-size: 16px; } .quick-actions { right: 10px; bottom: 80px; } .popup { width: 90%; padding: 15px; } .circular-progress { width: 50px; height: 50px; top: 10px; right: 10px; } .progress-text { top: 65px; right: 10px; font-size: 12px; } }
-        .stChatMessage { background-color: #2A3030; border-radius: 10px; padding: 10px; color: #E0E0E0; margin-bottom: 5px; }
-        .stButton > button { background: linear-gradient(135deg, #219680 0%, #1e7a68 100%); color: white; border: none; border-radius: 12px; padding: 12px 24px; font-size: 16px; font-weight: 500; margin: 5px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(33, 150, 128, 0.3); min-height: 44px; }
-        .stButton > button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(33, 150, 128, 0.4); background: linear-gradient(135deg, #1e7a68 0%, #196b5b 100%); }
-        .stButton > button:active { transform: translateY(0); }
-        button[key="preview_btn"], button[key="download_btn"], button[key="improve_btn"] { border-radius: 50% !important; width: 60px !important; height: 60px !important; font-size: 24px !important; padding: 0 !important; }
-        div[data-testid="column"]:has(button[key="preview_btn"]), div[data-testid="column"]:has(button[key="download_btn"]), div[data-testid="column"]:has(button[key="improve_btn"]) { position: fixed; bottom: 100px; right: 20px; z-index: 1000; }
-        div[data-testid="column"]:has(button[key="download_btn"]) { bottom: 170px; }
-        div[data-testid="column"]:has(button[key="improve_btn"]) { bottom: 240px; }
-        .stDownloadButton > button { background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 12px; padding: 12px 24px; font-size: 16px; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3); }
-        .stDownloadButton > button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(5, 150, 105, 0.4); background: linear-gradient(135deg, #047857 0%, #065f46 100%); }
-        .stSelectbox > div > div { border-radius: 12px; border: 2px solid #e5e7eb; background: white; color: #1f2937; }
-        .stSelectbox > div > div:focus-within { border-color: #219680; box-shadow: 0 0 0 3px rgba(33, 150, 128, 0.1); }
-        .streamlit-expanderHeader { background: #f8fafc; border-radius: 12px; border: 1px solid #e5e7eb; }
-        .streamlit-expanderContent { background: white; border-radius: 0 0 12px 12px; border: 1px solid #e5e7eb; border-top: none; }
+        /* Import modern font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        
+        /* Base App Styling - Dark mode like ChatGPT */
+        .stApp { 
+            background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #e5e5e5; 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+        }
+        
+        /* Hide default Streamlit elements */
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
+        
+        /* Modern Header with CV Assistant branding - Dark mode */
+        .main-header {
+            background: #2d2d2d;
+            border-bottom: 1px solid #404040;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0;
+        }
+        
+        .app-subtitle {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            margin: 0;
+        }
+        
+        /* Modern Progress Indicator - Dark mode */
+        .progress-container {
+            background: #404040;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 16px 0;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .progress-bar {
+            background: #e5e7eb;
+            border-radius: 6px;
+            height: 6px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        /* Chat Messages - ChatGPT style */
+        .stChatMessage {
+            background: transparent !important;
+            border: none !important;
+            padding: 24px 0 !important;
+            margin: 0 !important;
+        }
+        
+        .stChatMessage > div {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* User/Assistant message styling with readable contrast on dark theme */
+        .stChatMessage[data-testid="user-message"],
+        .stChatMessage[data-testid="assistant-message"] {
+            background: #ffffff !important;
+            border-bottom: 1px solid #e5e7eb !important;
+            color: #111827 !important;
+        }
+        .stChatMessage[data-testid="user-message"] *,
+        .stChatMessage[data-testid="assistant-message"] * {
+            color: #111827 !important;
+        }
+        
+    /* (Chat input styling is now handled by chat_interface to be sticky with no margin) */
+        
+        /* Floating Action Buttons - Modern design */
+        /* Actions toolbar (non-floating) */
+        .actions-toolbar { 
+            display: flex; 
+            gap: 8px; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 8px 0 12px; 
+        }
+        
+        /* Modern button styling */
+        .stButton > button {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 12px 24px !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            font-family: 'Inter', sans-serif !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            min-height: 44px !important;
+        }
+        
+        .stButton > button:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+        }
+        
+        /* Content container - proper spacing for fixed chat */
+        .main-content {
+            padding-bottom: 120px;
+            margin: 0;
+        }
+        
+        /* Modern expandable sections - Dark mode */
+        .streamlit-expanderHeader {
+            background: #404040 !important;
+            border: 1px solid #555555 !important;
+            border-radius: 8px !important;
+            padding: 16px !important;
+            font-weight: 500 !important;
+            color: #e5e5e5 !important;
+        }
+        
+        .streamlit-expanderContent {
+            background: #333333 !important;
+            border: 1px solid #555555 !important;
+            border-top: none !important;
+            border-radius: 0 0 8px 8px !important;
+            padding: 20px !important;
+            color: #e5e5e5 !important;
+        }
+        
+        /* Modal/Popup styling - Dark mode */
+        .modern-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+        
+        .modal-content {
+            background: #2d2d2d;
+            color: #e5e5e5;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        /* Content spacing adjustments */
+        .main-content {
+            padding-bottom: 140px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        
+    /* (Floating actions removed) */
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .main-header { padding: 1rem; }
+            .app-title { font-size: 1.25rem; }
+            /* No floating actions on mobile (removed) */
+            .main-content { 
+                padding-left: 16px; 
+                padding-right: 16px; 
+                padding-bottom: 120px; 
+            }
+            .modal-content { 
+                margin: 16px; 
+                max-width: calc(100vw - 32px); 
+            }
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -179,58 +370,168 @@ def main():
         st.session_state.update_counter = 0 
     if "last_message_count" not in st.session_state:
         st.session_state.last_message_count = 0
+    if "temp_message" not in st.session_state:
+        st.session_state.temp_message = None
+    if "temp_message_time" not in st.session_state:
+        st.session_state.temp_message_time = None
 
     conversation_manager = session_manager.conversation_manager
     agent = CVAgent(conversation_manager)
-
+    
+    # Load current CV data
+    cv_data = load_cv_data()
+    
+    # Check if all required sections are completed
+    required_sections = ["personal_info", "summary", "experience", "education", "skills"]
+    completed_required = sum(1 for section in required_sections if has_data_check(cv_data, section))
+    all_required_completed = completed_required >= 5
+    
+    # Handle temporary message cleanup (3 seconds)
+    import time
+    if st.session_state.temp_message_time and time.time() - st.session_state.temp_message_time > 3:
+        st.session_state.temp_message = None
+        st.session_state.temp_message_time = None
+    
+    # Modern Header
+    st.markdown("""
+        <div class="main-header">
+            <div class="header-content">
+                <div>
+                    <h1 class="app-title">🎯 Niajiri CV Assistant</h1>
+                    <p class="app-subtitle">AI-Powered Professional CV Builder</p>
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    # Modern Progress Indicator
+    progress_sections = ["personal_info", "summary", "experience", "education", "skills"]
+    completed_sections = sum(1 for section in progress_sections if has_data_check(cv_data, section))
+    progress_percentage = (completed_sections / len(progress_sections)) * 100
+    
+    # st.markdown(f"""
+    #     <div class="progress-container">
+    #         <div class="progress-text">
+    #             <span>📊 CV Completion Progress</span>
+    #             <span><strong>{completed_sections}/{len(progress_sections)} sections</strong></span>
+    #         </div>
+    #         <div class="progress-bar">
+    #             <div class="progress-fill" style="width: {progress_percentage}%"></div>
+    #         </div>
+    #         <div style="text-align: center; font-size: 0.75rem; color: #9ca3af; margin-top: 4px;">
+    #             {progress_percentage:.0f}% Complete
+    #         </div>
+    #     </div>
+        
+    #     <!-- Main Content Container -->
+    #     <div class="main-content">
+    # """, unsafe_allow_html=True)
+    
+    # Display temporary message if exists
+    if st.session_state.temp_message:
+        st.error(st.session_state.temp_message)
+        st.rerun()  # Auto-refresh to clear message after timeout
+    
+    # Chat interface with updated CV data tracking (progress tracker)
+    cv_data = progress_tracker(agent)
+    
+    # Initialize welcome message if needed
     if not st.session_state.messages:
         response = agent.start_session(st.session_state.session_id)
         st.session_state.messages.append({"role": "assistant", "content": response})
 
+    # Track message updates
     current_message_count = len(st.session_state.messages)
     if current_message_count > st.session_state.last_message_count:
         st.session_state.update_counter += 1
         st.session_state.last_message_count = current_message_count
 
-    st.markdown("""
-    <div style="text-align: center; padding: 15px; margin-bottom: 20px;">
-        <h1 style="color: #219680; margin: 0;">🚀 Niajiri CV Builder</h1>
-        <p style="color: #666; margin: 5px 0;">Let's build your professional CV together!</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    cv_data = progress_tracker(agent)
+    # Display last N chat messages for better mobile performance
+    max_messages = 20
+    messages_to_show = (
+        st.session_state.messages[-max_messages:]
+        if len(st.session_state.messages) > max_messages
+        else st.session_state.messages
+    )
+    for message in messages_to_show:
+        with st.chat_message(message["role"]):
+            content = message["content"]
+            if isinstance(content, str) and len(content) > 800:
+                st.markdown(content[:800] + "…")
+                with st.expander("Show full message"):
+                    st.markdown(content)
+            else:
+                st.markdown(content) 
 
-    st.markdown('<div class="chat-container">', unsafe_allow_html=True)
-    chat_interface(agent)
-    st.markdown('</div>', unsafe_allow_html=True)
-
+    # Hidden buttons for functionality (triggered by floating buttons)
     col1, col2, col3 = st.columns(3)
+    
     with col1:
-        if st.button("👁️", help="Preview CV", key="preview_btn"): 
+        if st.button("👁️", help="Preview CV", key="preview-btn", type="secondary"): 
             st.session_state.show_preview = not st.session_state.show_preview
             st.session_state.show_download = False
             st.session_state.show_improve = False
             st.rerun()
     
     with col2:
-        if st.button("📥", help="Download CV", key="download_btn"): 
-            st.session_state.show_download = not st.session_state.show_download
-            st.session_state.show_preview = False
-            st.session_state.show_improve = False
-            st.rerun()
+        download_help = "Download CV" if all_required_completed else "Complete all mandatory sections first"
+        if st.button("📥", help=download_help, key="download-btn", type="secondary"): 
+            if all_required_completed:
+                st.session_state.show_download = not st.session_state.show_download
+                st.session_state.show_preview = False
+                st.session_state.show_improve = False
+                st.rerun()
+            else:
+                # Show temporary message
+                import time
+                st.session_state.temp_message = "Please complete all mandatory sections (Personal Info, Summary, Experience, Education, Skills)"
+                st.session_state.temp_message_time = time.time()
+                st.rerun()
     
     with col3:
-        if st.button("🚀", help="Improve CV", key="improve_btn"): 
-            st.session_state.show_improve = not st.session_state.show_improve
-            st.session_state.show_preview = False
-            st.session_state.show_download = False
-            st.rerun()
-            
-    # This line was overwriting the real-time data from the progress tracker.
-    # By removing it, we ensure the UI always reflects the latest session state.
-    # cv_data = load_cv_data()
-
+        improve_help = "Improve CV" if all_required_completed else "Complete all mandatory sections first"
+        if st.button("🚀", help=improve_help, key="improve-btn", type="secondary"): 
+            if all_required_completed:
+                st.session_state.show_improve = not st.session_state.show_improve
+                st.session_state.show_preview = False
+                st.session_state.show_download = False
+                st.rerun()
+            else:
+                # Show temporary message
+                import time
+                st.session_state.temp_message = "Please complete all mandatory sections (Personal Info, Summary, Experience, Education, Skills)"
+                st.session_state.temp_message_time = time.time()
+                st.rerun()
+    
+    # Hide the hidden trigger button columns from layout
+    st.markdown("""
+        <style>
+        [data-testid="column"]:has(button[key="preview-btn"]), 
+        [data-testid="column"]:has(button[key="download-btn"]), 
+        [data-testid="column"]:has(button[key="improve-btn"]) {
+            display: none !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    # Dynamic CSS for disabled button styling
+    if not all_required_completed:
+        st.markdown(f"""
+            <style>
+            button[key="download-btn"], button[key="improve-btn"] {{
+                background: #6b7280 !important;
+                color: #9ca3af !important;
+                cursor: not-allowed !important;
+                opacity: 0.6 !important;
+            }}
+            button[key="download-btn"]:hover, button[key="improve-btn"]:hover {{
+                transform: none !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+                background: #6b7280 !important;
+            }}
+            </style>
+        """, unsafe_allow_html=True)
+    
     # Preview Section
     if st.session_state.show_preview:
         if not cv_data:
@@ -564,6 +865,12 @@ def main():
                         if st.button("❌ Close", key="close_preview", help="Close preview and go back"):
                             st.session_state.show_enhancement_preview = False
                             st.rerun()
+
+    # Close main content div
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # Sticky, native Streamlit chat input (handled by chat_interface)
+    chat_interface(agent)
 
 if __name__ == "__main__":
     main()

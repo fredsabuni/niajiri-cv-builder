@@ -45,58 +45,91 @@ def progress_tracker(agent):
     completed_required = [s for s in completed_sections if s["required"]]
     required_progress = len(completed_required) / len(required_sections) if required_sections else 0
     
-    # Main progress display
-    if completed_count == 0:
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, #219680 0%, #1e7a68 100%); border-radius: 15px; padding: 20px; margin: 20px 0; color: white; text-align: center; box-shadow: 0 4px 15px rgba(33, 150, 128, 0.3);">
-            <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">📋 Your CV Progress</div>
-            <div style="font-size: 36px; font-weight: bold; margin: 15px 0;">0%</div>
-            <div style="font-size: 16px; opacity: 0.9;">0 of 8 sections completed</div>
-            <div style="font-size: 14px; opacity: 0.8; margin-top: 10px;">🚀 Ready to start? Just chat with me!</div>
+    # Compact progress display for mobile
+    st.markdown(f"""
+    <div style="background: linear-gradient(135deg, #219680 0%, #1e7a68 100%); border-radius: 12px; padding: 15px; margin: 15px 0; color: white; box-shadow: 0 4px 15px rgba(33, 150, 128, 0.3);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div>
+                <div style="font-size: 18px; font-weight: bold;">📋 CV Progress</div>
+                <div style="font-size: 13px; opacity: 0.9;">{completed_count}/{total_sections} sections • Required: {len(completed_required)}/{len(required_sections)} ✅</div>
+            </div>
+            <div style="font-size: 24px; font-weight: bold;">{progress_percentage}%</div>
         </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.markdown(f"""
-        <div style="background: linear-gradient(135deg, #219680 0%, #1e7a68 100%); border-radius: 15px; padding: 20px; margin: 20px 0; color: white; text-align: center; box-shadow: 0 4px 15px rgba(33, 150, 128, 0.3);">
-            <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">📋 Your CV Progress</div>
-            <div style="font-size: 36px; font-weight: bold; margin: 15px 0;">{progress_percentage}%</div>
-            <div style="font-size: 16px; opacity: 0.9;">{completed_count} of {total_sections} sections completed</div>
-            <div style="font-size: 14px; opacity: 0.8; margin-top: 10px;">Required: {len(completed_required)}/{len(required_sections)} ✅</div>
+        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; overflow: hidden;">
+            <div style="width: {progress_percentage}%; height: 100%; background: #ffffff; border-radius: 3px; transition: width 0.5s ease;"></div>
         </div>
-        """, unsafe_allow_html=True)
-    
-    # Progress bar
-    st.progress(progress_percentage / 100)
+    </div>
+    """, unsafe_allow_html=True)
     
     # Expandable detailed view
-    with st.expander("📝 Section Details", expanded=(completed_count < 3)):
+    with st.expander("📝 Section Details", expanded=False):
         st.markdown(f"### ✅ Completion Status ({completed_count}/{total_sections})")
         
-        # Create two columns for better layout
-        col1, col2 = st.columns(2)
-        
-        for i, section in enumerate(sections):
-            column = col1 if i % 2 == 0 else col2
+        # Mobile-optimized grid layout
+        for i in range(0, len(sections), 2):
+            col1, col2 = st.columns(2)
             
-            with column:
-                is_completed = has_section_data(cv_data, section["key"])
-                required_text = "Required" if section["required"] else "Optional"
-                
+            # First section
+            section = sections[i]
+            is_completed = has_section_data(cv_data, section["key"])
+            required_text = "Required" if section["required"] else "Optional"
+            
+            with col1:
                 if is_completed:
                     st.markdown(f"""
-                    <div style="background-color: #d1e7dd; color: #0f5132; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #198754;">
-                        <div style="font-weight: bold;">✅ {section['icon']} {section['name']}</div>
-                        <div style="font-size: 12px; opacity: 0.8;">Complete ({required_text})</div>
+                    <div style="background-color: #d1e7dd; color: #0f5132; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #198754;">
+                        <div style="font-weight: bold; font-size: 14px;">✅ {section['icon']} {section['name']}</div>
+                        <div style="font-size: 11px; opacity: 0.8;">Complete ({required_text})</div>
                     </div>
                     """, unsafe_allow_html=True)
                 else:
                     color_scheme = "#f8d7da; color: #842029; border-left: 4px solid #dc3545" if section["required"] else "#cff4fc; color: #055160; border-left: 4px solid #0dcaf0"
                     st.markdown(f"""
-                    <div style="background-color: {color_scheme}; padding: 12px; border-radius: 8px; margin-bottom: 10px;">
-                        <div style="font-weight: bold;">📝 {section['icon']} {section['name']}</div>
-                        <div style="font-size: 12px; opacity: 0.8;">Pending ({required_text})</div>
+                    <div style="background-color: {color_scheme}; padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+                        <div style="font-weight: bold; font-size: 14px;">📝 {section['icon']} {section['name']}</div>
+                        <div style="font-size: 11px; opacity: 0.8;">Pending ({required_text})</div>
                     </div>
                     """, unsafe_allow_html=True)
+            
+            # Second section (if exists)
+            if i + 1 < len(sections):
+                section = sections[i + 1]
+                is_completed = has_section_data(cv_data, section["key"])
+                required_text = "Required" if section["required"] else "Optional"
+                
+                with col2:
+                    if is_completed:
+                        st.markdown(f"""
+                        <div style="background-color: #d1e7dd; color: #0f5132; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #198754;">
+                            <div style="font-weight: bold; font-size: 14px;">✅ {section['icon']} {section['name']}</div>
+                            <div style="font-size: 11px; opacity: 0.8;">Complete ({required_text})</div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        color_scheme = "#f8d7da; color: #842029; border-left: 4px solid #dc3545" if section["required"] else "#cff4fc; color: #055160; border-left: 4px solid #0dcaf0"
+                        st.markdown(f"""
+                        <div style="background-color: {color_scheme}; padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+                            <div style="font-weight: bold; font-size: 14px;">📝 {section['icon']} {section['name']}</div>
+                            <div style="font-size: 11px; opacity: 0.8;">Pending ({required_text})</div>
+                        </div>
+                        """, unsafe_allow_html=True)
+    
+    # Status messages
+    if completed_count == 0:
+        st.info("🚀 **Let's get started!** Just tell me about yourself and I'll help build your professional CV.")
+    elif len(completed_required) < len(required_sections):
+        remaining = len(required_sections) - len(completed_required)
+        st.warning(f"⚠️ **{remaining} required section{'s' if remaining > 1 else ''} remaining!** These are essential for your CV.")
+    elif completed_count < total_sections:
+        remaining = total_sections - completed_count
+        st.info(f"🎯 **Almost perfect!** Just {remaining} optional section{'s' if remaining > 1 else ''} left to make your CV even better.")
+    else:
+        st.success("🎉 **Congratulations!** Your CV is complete with all 8 sections and ready to download!")
+        st.balloons()
+    
+    st.session_state.cv_data = cv_data
+    
+    return cv_data
         
     
     if completed_count == 0:
